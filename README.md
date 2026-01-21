@@ -43,4 +43,64 @@ In the end I just used `venv` to make my own environment running on python 3.9
 
 - if multiple instruments/acctuators/detectors use the same serial port/communication, you need to set one of them as *Master* and the others as *Slaves* --> when editing the preset --> set e.g. the X mirror as *Master* (under *status* just above X or Y) --> note the random number *device ID* and put the other instruments as *Slave* with the same *device ID*s (also the camera)
 
-- now in the *dashboard* if we move mirror(s), the camera will move!s
+- now in the *dashboard* if we move mirror(s), the camera will move!
+
+## Daq Scan 
+
+- Extensions --> do scans --> failed to open it *ImportError: the pytables module is not present*
+- it was some version issue with the *venv* --> I created another *env with conda* and python3.11 and it worked (environment name = epfl_intro)
+
+## Second Day - 20.01.26
+
+- today we will learn all about how to write our own *plugin* 
+- the *h5browser* is used to look at the data that is recorded using a *scan* --> *hdf5 file* --> binary files in which the data is stored --> saves data inside a *tree* --> contains like a *folder substructure (nodes)*
+
+- we will get the *template* for creating our own *plugin* by *cloning* a *Github repository*, the template repo is located at: *https://github.com/PyMoDAQ/pymodaq_plugins_template* --> click on *use this template* --> *create a new repo* 
+
+- today we will use a special teaching tesmplate repo located at *https://github.com/PyMoDAQ/pymodaq_plugins_teaching* --> *fork* this branch --> untick *copy the main branch only*
+
+- then I cloned the repo using *git clone* 
+
+- now we need to install the *plugins_teaching* into our *pymodaq environment*; however if we just use *pip install* the package will be *installed in its current state* meaning that if we change something in the *.py files* its changes will not take change --> for this we need to install the *plugins_teaching* package using *developer mode*
+
+- *pip* is using the *.toml* file as instructions to install the package --> just a *.txt* file with instructions essentially --> we need to open it and fill in information if necessary, e.g. if it's an instrument or an extention etc. or if additional dependecies and packagaes are required
+
+- to install the package in *developer mode (editor -e mode)* we can run the command `pip install -e .` --> . mean use current path 
+
+- did the installation work? You can use *pip freeze* to list all the installed packages within the evironment
+
+- inside the *scr* directory there are the *source* files we need to modify --> two folders --> *daq_viewer_plugins* and *daq_move_plugins* --> we will have to modfify the templates in there; here we will control a virtual instrument --> spectrometer 
+
+- our virtual instrument --> entrance slit --> colimating mirror --> grating --> focusing miror --> onto exit slit --> at exit slit: photodiode 
+
+- what we want to do --> change angle theta of grating and plot intensity of photodiode --> this will give as the spectrum of the light
+
+- *hardware* folder = place to put the driver for your instrument --> for our example --> *spectrometer.py* --> class that controls communication with the instrument 
+
+- what are modules in python? --> if a folder contains a file *__init__.py* it means you can import it in python --> for instance *hardware* is an importable module containing an file called *spectrometer.py* which contains an *object/class* called *Spectrometer*, so we can import it via `from pymodaq_plugins_teaching.hardware.spectrometer import Spectrometer` 
+
+- we want to now add files from the *pymodaq_plugins_template* so we can *clone* it from GitHub (we do not need to *fork* it since we just want to copy/paste some files form this repo into our teaching repo)s
+
+## Controling the Monochromator
+
+- from the *pymodaq_plugins_template/src/pymodaq_plugins_template/daq_move_plugins/* copy the *daq_move_Template.py* and paste it into your project, i.e. *pymodaq_plugins_teaching/src/pymodaq_plugins_teaching/daq_move_plugins/*
+
+- the we rename the *DAQ_Move_Template* class to something meaningful like *DAQ_Move_Monochromator*
+
+- now we do our first commit: `git add .` and then `git commit -m "your comment"` and then we push it to GitHub via `git push`
+
+- let's actually create a new *branch* `feature/daq_move_instrument` where we will work on the *daq_move* implementations --> `git switch -c feature/daq_move_instrument` to see on which branch you are `git branch`s
+
+- open the *daq_move_Template.py* and go through the TODO's
+
+- after doing TODO's 1-3 Monochromator should be known by Pymodaq --> let's check if we can see it in the list of possible actuators in `daq_move` 
+
+- now let's do a commit
+
+- to inser breakpoints manually `import pdb` and then `pdb.set_trace()` where you want to stop
+
+## Controling the Photodiode 
+
+- the photodiode is a 0D detector, it just gives 1 value, i.e. the intensity
+- so again we copy *Daq_Viewer_Template.py* and fill in all the ToDo's
+- in the `grab_data()` --> DataToExport --> data --> needs to be list so --> `data = [data_tot]`
