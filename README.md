@@ -104,3 +104,16 @@ In the end I just used `venv` to make my own environment running on python 3.9
 - the photodiode is a 0D detector, it just gives 1 value, i.e. the intensity
 - so again we copy *Daq_Viewer_Template.py* and fill in all the ToDo's
 - in the `grab_data()` --> DataToExport --> data --> needs to be list so --> `data = [data_tot]`
+
+## Day 3 - 21.01.26
+
+- everything we discussed yesterday *https://pymodaq.cnrs.fr/en/latest/developer_folder/plugins.html*
+
+- today we will learn how to add *parameters* that control our instruments --> these are input fields in the GUI where we can put our instrument parameters
+
+- depening on the parameter type --> you get different functionalities in the GUI, e.g. if type = list --> then parameter is a drop-down menu with as many entries as the list
+
+- add dictonary for your custom parameter --> then for your 
+
+## Now we will make a Beam Profiler = Pymodaq extensions
+
